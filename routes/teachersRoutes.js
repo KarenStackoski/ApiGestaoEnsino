@@ -5,10 +5,103 @@ const path = require('path');
 const router = express.Router();
 const teachersDB = require('../db/teachers.json');
 
-router.get('/', (req, res)=>{
+
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *   Teachers:
+ *     type: object
+ *     required:
+ *      - id
+ *      - name
+ *      - school_disciplines
+ *      - contact
+ *      - phone_number
+ *      - status
+ *     properties:
+ *      id:
+ *        type: string
+ *        description: O id é gerado automaticamente no cadastro do Professor(a)
+ *      name:
+ *        type: string
+ *        description: Nome do Professor(a)
+ *      school_disciplines:
+ *        type: string
+ *        description: Disciplina que o Professor(a) ministra
+ *      contact:
+ *        type: string
+ *        description: E-mail do Professor(a)
+ *      phone_number:
+ *        type: string
+ *        description: Contato do telefone do Professor(a)
+ *      status:
+ *        type: string
+ *        description: Se o Professor(a) está ativamente dando aulas
+ *     example:
+ *      name: Mateus M. Mariot
+ *      school_disciplines: Português
+ *      contact: mateusmartignagomariot@unesc.net
+ *      phone_number: 48999055949
+ *      status: on
+ * 
+ */
+
+/**
+ * @swagger
+ * tags: 
+ *   - name: Teachers
+ *     description: >
+ *       Controle da API pelo cadastro, consulta, edição e delete dos Professores(as) nos JSONs.  
+ *       **Por Mateus M. Mariot**
+ */
+
+
+    /**
+ * @swagger
+ * /teachers:
+ *   get:
+ *     summary: Retorna uma lista de todos os professores
+ *     tags: [Teachers]
+ *     responses:
+ *       200:
+ *         description: A lista de professores
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Teachers'
+ */
+
+router.get('/', (req, res) => {
     console.log("getroute");
     res.json(teachersDB);
 });
+
+/**
+ * @swagger
+ * /teachers/{id}:
+ *   get:
+ *     summary: Retorna um professor pelo ID
+ *     tags: [Teachers]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID do Professor(a)
+ *     responses:
+ *       200:
+ *         description: Retorna os dados do professor(a)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Teachers'
+ *       404:
+ *         description: Professor(a) não encontrado
+ */
 
 router.get('/:id', (req,res)=>{
     const id = req.params.id;
@@ -18,6 +111,27 @@ router.get('/:id', (req,res)=>{
     });
     res.json(teacher);
 });
+
+/**
+ * @swagger
+ * /teachers:
+ *   post:
+ *     summary: Cria um novo professor
+ *     tags: [Teachers]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Teachers'
+ *     responses:
+ *       200:
+ *         description: O Professor(a) foi criado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Teachers'
+ */
 
 //POST "/teachers" 
 //BODY {"name": "Mateus", "school_disciplines": "Português", "contact": "mateus@ema.net", 
