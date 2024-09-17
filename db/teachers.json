@@ -6,13 +6,5 @@
     "phone_number": "48999055949",
     "status": "off",
     "id": "019f500f-238d-4e15-90c3-833d9f66f84d"
-  },
-  {
-    "name": "Carlos",
-    "school_disciplines": "a",
-    "contact": "carlos@unesc.net",
-    "phone_number": 707070,
-    "status": "on",
-    "id": "bba5e20a-474a-4d0e-a5b6-335553b0a0ce"
   }
 ]
