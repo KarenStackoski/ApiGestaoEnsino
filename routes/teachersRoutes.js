@@ -166,6 +166,36 @@ router.post('/', (req, res)=>{
     return res.json(teacher);
 });
 
+/**
+ * @swagger
+ * /teachers/{id}:
+ *   put:
+ *     summary: Atualiza os dados de um Professor(a) pela ID
+ *     tags: [Teachers]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID do Professor(a)
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Teachers'
+ *     responses:
+ *       200:
+ *         description: O Professor(a) foi atualizado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Teachers'
+ *       400:
+ *         description: Professor(a) não encontrado
+ */
+
 router.put('/:id', (req, res)=>{
     const id = req.params.id;
     const newTeacher = req.body;
@@ -198,6 +228,30 @@ router.put('/:id', (req, res)=>{
     fs.writeFileSync(path.join(__dirname, '../db/teachers.json'), JSON.stringify(teachersDB, null, 2), 'utf8');
     return res.json(newTeacher);
 });
+
+/**
+ * @swagger
+ * /teachers/{id}:
+ *   delete:
+ *     summary: Deleta o Professor(a) através do ID
+ *     tags: [Teachers]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID do Professor(a)
+ *     responses:
+ *       200:
+ *         description: O Professor(a) foi deletado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Teachers'
+ *       400:
+ *         description: Professor(a) não encontrado
+ */
 
 router.delete('/:id', (req, res)=>{
     const id = req.params.id;
