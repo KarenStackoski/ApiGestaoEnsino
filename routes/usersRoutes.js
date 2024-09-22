@@ -10,11 +10,10 @@ router.get('/', (req, res)=>{
     res.json(usersDB);
 });
 
-router.get('/:id/:name', (req, res)=>{
+router.get('/:id', (req, res)=>{
     const id = req.params.id;
-    const name = req.params.name;
 
-    var findUser = usersDB.find(user=>user.id === id || user.name === name)
+    var findUser = usersDB.find(user=>user.id === id)
 
     if(!findUser) return res.status(404).json({
         "erro:": "Usuário não encontrado"
@@ -54,12 +53,50 @@ router.post('/', (req, res)=>{
     return res.json(user)
 });
 
-router.put('', (req, res)=>{
-    
+router.put('/:id', (req, res)=>{
+    const id = req.params.id;
+    const newUser = req.body;
+    const atualUserIndex = usersDB.findIndex(atualUserIndex => atualUserIndex.id === id);
+
+    if(atualUserIndex === -1) {
+        return res.status(400).json({
+            "erro": "Usuário não encontrado"
+        });
+    }
+
+    if(!newUser.name) return res.status(400).json({
+        "erro": "Parâmetro nome do Usuário é obrigatório!"
+    });
+    if(!newUser.email) return res.status(400).json({
+        "erro": "Parâmetro e-mail do Usuário é obrigatório!"
+    });
+    if(!newUser.user) return res.status(400).json({
+        "erro": "Parâmetro user do Usuário é obrigatório!"
+    });
+    if(!newUser.level) return res.status(400).json({
+        "erro": "Parâmetro nível do Usuário é obrigatório!"
+    });
+    if(!newUser.status) return res.status(400).json({
+        "erro": "Parâmetro status do Usuário é obrigatório!"
+    });
+
+    newUser.id = usersDB[atualUserIndex].id;
+    usersDB[atualUserIndex] = newUser;
+
+    fs.writeFileSync(path.join(__dirname, '../db/users.json'), JSON.stringify(usersDB, null, 2), 'utf8');
+    return res.json(newUser);
 });
 
-router.delete('', (req, res)=>{
-    
+router.delete('/:id', (req, res)=>{
+    const id = req.params.id;
+    const user = usersDB.find(user => user.id === id);
+
+    if(!user) return res.status(400).json({
+        "user": "Usuário não encontrado!"
+    });
+
+    var deletado = usersDB.splice(id, 1)[0]
+    res.json(deletado);
 });
 
 module.exports = router;
