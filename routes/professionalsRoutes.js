@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {v4: uuidv4} = require('uuid');
-const professionals = require('./professionalsData'); // Supondo que seja um array de objetos
+const professionals = require('../db/professionals.json'); // Supondo que seja um array de objetos
 
 // GET: listar todos os registros
 router.get('/', (req, res) => {
@@ -77,8 +77,8 @@ router.put('/:id', (req, res) => {
     }
 
     if (!novoProfissional.nome) return res.status(400).json({ "erro": "Profissional precisa ter um 'nome'" });
-    if (!novoProfissional.raca) return res.status(400).json({ "erro": "Profissional precisa ter uma 'raca'" });
-    if (!novoProfissional.idade) return res.status(400).json({ "erro": "Profissional precisa ter uma 'idade'" });
+    if (!novoProfissional.cpf) return res.status(400).json({ "erro": "Profissional precisa ter uma 'cpf'" });
+    if (!novoProfissional.sexo) return res.status(400).json({ "erro": "Profissional precisa ter uma 'sexo'" });
 
     // Mantém o id existente
     novoProfissional.id = professionals[atualProfissionalIndex].id;
