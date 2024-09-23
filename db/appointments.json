@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "specialty": "Cardiologia",
+    "comments": "Primeira consulta",
+    "date": "2023-10-10",
+    "student": "João Silva",
+    "professional": "Dr. Ana Souza",
+    "id": "569fe49c-9bc7-41d3-bfa1-2597d2c35c51"
+  }
+]
