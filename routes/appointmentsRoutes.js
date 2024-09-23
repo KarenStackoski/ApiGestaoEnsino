@@ -51,7 +51,9 @@ const appointmentsDB = require('../db/appointments.json');
  * @swagger
  * tags:
  *   - name: Appointments
- *     description: Agendamento de atendimentos
+ *     description: >
+ *       Controle da API pelo cadastro, consulta, edição e delete dos Agendamentos(as) nos JSONs.  
+ *       **Por Érick Lúcio**
  */
 
 /**
