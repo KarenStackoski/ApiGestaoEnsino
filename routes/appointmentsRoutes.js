@@ -95,12 +95,12 @@ router.get('/', (req, res) => {
  *             schema:
  *               $ref: '#/components/schemas/Appointments'
  *       404:
- *         description: Appointments não encontrado
+ *         description: Agendamento não encontrado
  */
 router.get('/:id', (req, res) => {
     const id = req.params.id;
     const appointment = appointmentsDB.find(appointment => appointment.id === id);
-    if (!appointment) return res.status(404).json({ "erro": "Appointment não encontrado" });
+    if (!appointment) return res.status(404).json({ "erro": "Agendamento não encontrado" });
     res.json(appointment);
 });
 
@@ -108,7 +108,7 @@ router.get('/:id', (req, res) => {
  * @swagger
  * /appointments:
  *   post:
- *     summary: Cria um novo appointment
+ *     summary: Cria um novo agendamento
  *     tags: [Appointments]
  *     requestBody:
  *       required: true
@@ -118,7 +118,7 @@ router.get('/:id', (req, res) => {
  *             $ref: '#/components/schemas/Appointments'
  *     responses:
  *       200:
- *         description: Appointments criado com sucesso
+ *         description: Agendamento criado com sucesso
  *         content:
  *           application/json:
  *             schema:
@@ -131,11 +131,11 @@ router.post('/', (req, res) => {
     appointment.id = uuidv4();
 
     // Validações de campos obrigatórios
-    if (!appointment.specialty) return res.status(400).json({ "erro": "O appointment precisa ter uma especialidade" });
-    if (!appointment.comments) return res.status(400).json({ "erro": "O appointment precisa ter comentários" });
-    if (!appointment.date) return res.status(400).json({ "erro": "O appointment precisa ter uma data" });
-    if (!appointment.student) return res.status(400).json({ "erro": "O appointment precisa ter um estudante" });
-    if (!appointment.professional) return res.status(400).json({ "erro": "O appointment precisa ter um profissional" });
+    if (!appointment.specialty) return res.status(400).json({ "erro": "O agendamento precisa ter uma especialidade" });
+    if (!appointment.comments) return res.status(400).json({ "erro": "O agendamento precisa ter comentários" });
+    if (!appointment.date) return res.status(400).json({ "erro": "O agendamento precisa ter uma data" });
+    if (!appointment.student) return res.status(400).json({ "erro": "O agendamento precisa ter um estudante" });
+    if (!appointment.professional) return res.status(400).json({ "erro": "O agendamento precisa ter um profissional" });
 
     appointmentsDB.push(appointment);
 
@@ -152,7 +152,7 @@ router.post('/', (req, res) => {
  * @swagger
  * /appointments/{id}:
  *   put:
- *     summary: Atualiza um appointment pelo ID
+ *     summary: Atualiza um agendamento pelo ID
  *     tags: [Appointments]
  *     parameters:
  *       - in: path
@@ -160,7 +160,7 @@ router.post('/', (req, res) => {
  *         schema:
  *           type: string
  *         required: true
- *         description: ID do appointment a ser atualizado
+ *         description: ID do agendamento a ser atualizado
  *     requestBody:
  *       required: true
  *       content:
@@ -169,7 +169,7 @@ router.post('/', (req, res) => {
  *             $ref: '#/components/schemas/Appointment'
  *     responses:
  *       200:
- *         description: Appointment atualizado com sucesso
+ *         description: Agendamento atualizado com sucesso
  *         content:
  *           application/json:
  *             schema:
@@ -177,7 +177,7 @@ router.post('/', (req, res) => {
  *       400:
  *         description: Erro de validação
  *       404:
- *         description: Appointment não encontrado
+ *         description: Agendamento não encontrado
  */
 router.put('/:id', (req, res) => {
     const id = req.params.id;
@@ -185,13 +185,15 @@ router.put('/:id', (req, res) => {
     const appointmentIndex = appointmentsDB.findIndex(appointment => appointment.id === id);
 
     if (appointmentIndex === -1) {
-        return res.status(404).json({ "erro": "Appointmento não encontrado" });
+        return res.status(404).json({ "erro": "Agendamento não encontrado" });
     }
 
     // Validações de campos obrigatórios
-    if (!updatedAppointment.description) return res.status(400).json({ "erro": "O appointmento precisa ter uma descrição" });
-    if (!updatedAppointment.date) return res.status(400).json({ "erro": "O appointmento precisa ter uma data" });
-    if (!updatedAppointment.comments) return res.status(400).json({ "erro": "O appointmento precisa ter comentários" });
+    if (!updatedAppointment.specialty) return res.status(400).json({ "erro": "O agendamento precisa ter uma especialidade" });
+    if (!updatedAppointment.comments) return res.status(400).json({ "erro": "O agendamento precisa ter comentários" });
+    if (!updatedAppointment.date) return res.status(400).json({ "erro": "O agendamento precisa ter uma data" });
+    if (!updatedAppointment.student) return res.status(400).json({ "erro": "O agendamento precisa ter um estudante" });
+    if (!updatedAppointment.professional) return res.status(400).json({ "erro": "O agendamento precisa ter um profissional" });
 
     updatedAppointment.id = appointmentsDB[appointmentIndex].id;
     appointmentsDB[appointmentIndex] = updatedAppointment;
@@ -209,7 +211,7 @@ router.put('/:id', (req, res) => {
  * @swagger
  * /appointments/{id}:
  *   delete:
- *     summary: Remove um appointmento pelo ID
+ *     summary: Remove um agendamento pelo ID
  *     tags: [Appointments]
  *     parameters:
  *       - in: path
@@ -217,22 +219,22 @@ router.put('/:id', (req, res) => {
  *         schema:
  *           type: string
  *         required: true
- *         description: ID do appointmento a ser removido
+ *         description: ID do agendamento a ser removido
  *     responses:
  *       200:
- *         description: Appointmento removido com sucesso
+ *         description: Agendamento removido com sucesso
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Appointment'
  *       404:
- *         description: Appointmento não encontrado
+ *         description: Agendamento não encontrado
  */
 router.delete('/:id', (req, res) => {
     const id = req.params.id;
     const appointmentIndex = appointmentsDB.findIndex(appointment => appointment.id === id);
 
-    if (appointmentIndex === -1) return res.status(404).json({ "erro": "Appointmento não encontrado" });
+    if (appointmentIndex === -1) return res.status(404).json({ "erro": "Agendamento não encontrado" });
     const deletedAppointment = appointmentsDB.splice(appointmentIndex, 1)[0];
 
     fs.writeFileSync(
