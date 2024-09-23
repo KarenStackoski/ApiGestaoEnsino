@@ -5,6 +5,14 @@
     "date": "2023-10-10",
     "student": "João Silva",
     "professional": "Dr. Ana Souza",
-    "id": "569fe49c-9bc7-41d3-bfa1-2597d2c35c51"
+    "id": "77e10f26-161a-4870-be46-fd3e20adcc08"
+  },
+  {
+    "specialty": "Cardiologia",
+    "comments": "Retorno",
+    "date": "2023-10-9",
+    "student": "Érick Lúcio",
+    "professional": "Dr. Karen Stackoski",
+    "id": "32c88744-35d2-48c5-9243-e8793344a2e4"
   }
 ]
