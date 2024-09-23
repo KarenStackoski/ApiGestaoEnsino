@@ -9,7 +9,7 @@ const appointmentsDB = require('../db/appointments.json');
  * @swagger
  * components:
  *   schemas:
- *     Event:
+ *     Appointments:
  *       type: object
  *       required:
  *         - id
