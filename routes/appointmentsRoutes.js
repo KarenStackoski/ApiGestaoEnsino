@@ -168,14 +168,14 @@ router.post('/', (req, res) => {
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Appointment'
+ *             $ref: '#/components/schemas/Appointments'
  *     responses:
  *       200:
  *         description: Agendamento atualizado com sucesso
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Appointment'
+ *               $ref: '#/components/schemas/Appointments'
  *       400:
  *         description: Erro de validação
  *       404:
@@ -228,7 +228,7 @@ router.put('/:id', (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Appointment'
+ *               $ref: '#/components/schemas/Appointments'
  *       404:
  *         description: Agendamento não encontrado
  */
