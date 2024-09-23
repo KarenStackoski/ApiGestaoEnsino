@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {v4: uuidv4} = require('uuid');
 const professionals = require('../db/professionals.json'); // Supondo que seja um array de objetos
+
 /**
  * @swagger
  * components:
@@ -35,13 +36,13 @@ const professionals = require('../db/professionals.json'); // Supondo que seja u
  *                  type: string
  *                  description: Status do profissional (on/off)
  *          example:
- *              id: 123e4567-e89b-12d3-a456-426614174000
  *              name: Profissional Souza
  *              especialidade: Fisioterapeuta
  *              email: profissional@email.com
  *              numero: +5511999999999
  *              status: on
  */
+
 /**
  * @swagger
  * tags: 
@@ -50,6 +51,7 @@ const professionals = require('../db/professionals.json'); // Supondo que seja u
  *          Controle da API pelo cadastro, consulta, edição e exclusão dos profissionais nos JSONs.
  *          **Por Gregori Rodrigues Zaccaron**
  */
+
 /**
  * @swagger
  * /professionals:
@@ -64,13 +66,15 @@ const professionals = require('../db/professionals.json'); // Supondo que seja u
  *                      schema:
  *                          type: array
  *                          items:
- *                              $ref: '#/components/schemas/professionals'
+ *                              $ref: '#/components/schemas/Professionals'
  */
+
 // GET: listar todos os registros
 router.get('/', (req, res) => {
     console.log("Listando todos os profissionais");
     res.json(professionals);
 });
+
 /**
  * @swagger
  * /professionals/{id}:
@@ -90,13 +94,13 @@ router.get('/', (req, res) => {
  *              content: 
  *                  application/json:
  *                      schema:
- *                          $ref: '#/components/schemas/professionals'
+ *                          $ref: '#/components/schemas/Professionals'
  *          404:
  *              description: Profissional não encontrado
  */
 
 // GET por ID: busca por id
-router.get('/id/:id', (req, res) => {
+router.get('/:id', (req, res) => {
     const id = req.params.id;
     const profissional = professionals.find(prof => prof.id === id); // Busca pelo campo 'id'
     
@@ -107,6 +111,7 @@ router.get('/id/:id', (req, res) => {
     }
     res.json(profissional);
 });
+
 /**
  * @swagger
  * /professionals:
@@ -118,15 +123,16 @@ router.get('/id/:id', (req, res) => {
  *          content:
  *              application/json:
  *                  schema:
- *                      $ref: '#/components/schemas/professionals'
+ *                      $ref: '#/components/schemas/Professionals'
  *      responses:
  *          200:
  *              description: Sucesso ao criar o profissional
  *              content: 
  *                  application/json:
  *                      schema:
- *                          $ref: '#/components/schemas/professionals'
+ *                          $ref: '#/components/schemas/Professionals'
  */
+
 // POST: cadastrar um novo registro
 router.post('/', (req, res) => {
     const profissional = req.body;
@@ -164,14 +170,14 @@ router.post('/', (req, res) => {
  *          content:
  *              application/json: 
  *                  schema:
- *                      $ref: '#/components/schemas/professionals'
+ *                      $ref: '#/components/schemas/Professionals'
  *      responses:
  *          200:
  *              description: Sucesso ao alterar o usuário
  *              content: 
  *                  application/json:
  *                      schema:
- *                          $ref: '#/components/schemas/professionals'
+ *                          $ref: '#/components/schemas/Professionals'
  *          400:
  *              description: Usuário não encontrado ou parâmetros obrigatórios ausentes
  */
@@ -214,14 +220,14 @@ router.put('/:id', (req, res) => {
  *            schema:
  *              type: string
  *            required: true
- *            description: ID do profissional
+ *            description: ID do Profissional
  *      responses:
  *          200:
  *              description: Sucesso ao excluir o profissional
  *              content: 
  *                  application/json:
  *                      schema:
- *                          $ref: '#/components/schemas/professionals'
+ *                          $ref: '#/components/schemas/Professionals'
  *          404:
  *              description: Profissional não encontrado
  */

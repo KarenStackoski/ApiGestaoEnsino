@@ -31,7 +31,6 @@ const eventsDB = require('../db/events.json');
  *           type: string
  *           description: Comentários sobre o evento
  *       example:
- *         id: "123e4567-e89b-12d3-a456-426614174000"
  *         description: "Reunião de equipe"
  *         date: "2024-05-20T14:30:00Z"
  *         comments: "Discutir metas trimestrais"

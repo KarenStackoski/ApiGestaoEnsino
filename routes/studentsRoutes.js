@@ -35,7 +35,6 @@ const studentsDB = require('../db/students.json');
  *        type: string
  *        description: Se o Estudante está ativamente participando das aulas
  *     example:
- *      id: 7a6cc1282c5f6ec0235acd2bfa780145aa2a67fd
  *      name: Victor Leotte
  *      age: 6,
  *      phone_number: 48999055949
@@ -103,7 +102,7 @@ const studentsDB = require('../db/students.json');
       const id = req.params.id;
       var student = studentsDB.find(student=>student.id === id);
       if(!student) return res.status(404).json({
-          "erro":"Personagem não encontrado"
+          "erro":"Aluno(a) não encontrado"
       });
       res.json(student);
   });
@@ -209,7 +208,7 @@ const studentsDB = require('../db/students.json');
         "erro": "O estudante precisa ter um telefone"
       });
       if(!newStudent.status) return res.status(400).json({
-        "erro": "O estudamte precisa ter um status"
+        "erro": "O estudante precisa ter um status"
       });
       newStudent.id = studentsDB[atualStudentIndex].id
       studentsDB[atualStudentIndex] = newStudent;
@@ -218,9 +217,9 @@ const studentsDB = require('../db/students.json');
       return res.json(newTeacher);
   });
 
-  /**
+/**
  * @swagger
- * /studens/{id}:
+ * /students/{id}:
  *   delete:
  *     summary: Deleta o Estudante através do ID
  *     tags: [Students]
@@ -239,7 +238,7 @@ const studentsDB = require('../db/students.json');
  *             schema:
  *               $ref: '#/components/schemas/Students'
  *       400:
- *         description: Professor(a) não encontrado
+ *         description: Estudante não encontrado
  */
   
   router.delete('/:id', (req, res)=>{

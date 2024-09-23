@@ -38,7 +38,6 @@ const usersDB = require('../db/users.json');
  *                  type: string
  *                  description: Status do usuário
  *          example:
- *              id: 123e4567-e89b-12d3-a456-426614174000
  *              name: Karen Bialescki Stackoski
  *              email: stackoski@email.com
  *              user: stackoski

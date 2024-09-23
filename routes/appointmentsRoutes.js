@@ -39,7 +39,6 @@ const appointmentsDB = require('../db/appointments.json');
  *           type: string
  *           description: Nome do profissional
  *       example:
- *         id: "123e4567-e89b-12d3-a456-426614174000"
  *         specialty: "Fisioterapeuta"
  *         comments: "Dores no joelho"
  *         date: "2024-05-20T14:30:00Z"
