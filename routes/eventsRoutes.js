@@ -41,6 +41,7 @@ const eventsDB = require('../db/events.json');
  * tags:
  *   - name: Events
  *     description: Gerenciamento de eventos
+ *      **Por Luis Gabriel Mendonça Reos**
  */
 
 /**
