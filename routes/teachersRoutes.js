@@ -107,7 +107,40 @@ router.get('/:id', (req,res)=>{
     const id = req.params.id;
     var teacher = teachersDB.find(teacher=>teacher.id === id);
     if(!teacher) return res.status(404).json({
-        "erro":"Personagem não encontrado"
+        "erro":"Professor(a) não encontrado"
+    });
+    res.json(teacher);
+});
+
+/**
+ * @swagger
+ * /teachers/name/{name}:
+ *   get:
+ *     summary: Retorna um professor pelo Nome
+ *     tags: [Teachers]
+ *     parameters:
+ *       - in: query
+ *         name: name
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Nome do Professor(a)
+ *     responses:
+ *       200:
+ *         description: Retorna os dados do professor(a)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Teachers'
+ *       404:
+ *         description: Professor(a) não encontrado
+ */
+
+router.get('/name/:name', (req, res) => {
+    const name = req.query.name.toLowerCase();
+    const teacher = teachersDB.filter(teacher => teacher.name.toLowerCase().includes(name));
+    if (!teacher) return res.status(404).json({
+        "erro": "Professor(a) não encontrado"
     });
     res.json(teacher);
 });
