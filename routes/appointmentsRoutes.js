@@ -104,6 +104,65 @@ router.get('/:id', (req, res) => {
     if (!appointment) return res.status(404).json({ "erro": "Agendamento não encontrado" });
     res.json(appointment);
 });
+/**
+ * @swagger
+ * /appointments/search:
+ *   get:
+ *     summary: Pesquisa appointmentos por nome e/ou data
+ *     tags: [Appointments]
+ *     parameters:
+ *       - in: query
+ *         name: description
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: Nome do appointment para filtragem
+ *       - in: query
+ *         name: date
+ *         schema:
+ *           type: string
+ *           format: date
+ *         required: false
+ *         description: Data do appointment para filtragem (formato YYYY-MM-DD)
+ *     responses:
+ *       200:
+ *         description: Lista de appointments filtrados
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Appointment'
+ *       400:
+ *         description: Parâmetros de consulta inválidos
+ */
+router.get('/search', (req, res) => {
+    const { description, date } = req.query;
+    let filteredAppointments = appointmentsDB;
+
+    // Filtragem por descrição
+    if (description) {
+        filteredAppointments = filteredAppointments.filter(appointment =>
+            appointment.description.toLowerCase().includes(description.toLowerCase())
+        );
+    }
+
+    // Filtragem por data
+    if (date) {
+        // Verificação se a data está no formato correto
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!dateRegex.test(date)) {
+            return res.status(400).json({ "erro": "Formato de data inválido. Use YYYY-MM-DD." });
+        }
+
+        // Filtra os appointmentos pela data
+        filteredAppointments = filteredAppointments.filter(appointment =>
+            appointment.date.startsWith(date)
+        );
+    }
+
+    res.json(filteredAppointments);
+});
 
 /**
  * @swagger
