@@ -104,6 +104,52 @@ router.get('/:id', (req, res) => {
     if (!appointment) return res.status(404).json({ "erro": "Agendamento não encontrado" });
     res.json(appointment);
 });
+/**
+ * @swagger
+ * /appointments/date/{date}:
+ *   get:
+ *     summary: Pesquisa agendamentos por data
+ *     tags: [Appointments]
+ *     parameters:
+ *       - in: query
+ *         name: date
+ *         schema:
+ *           type: string
+ *           format: date
+ *         required: false
+ *         description: Data do agendamento para filtragem (formato YYYY-MM-DD)
+ *     responses:
+ *       200:
+ *         description: Lista de agendamentos filtrados
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Appointments'
+ *       400:
+ *         description: Parâmetros de consulta inválidos
+ */
+router.get('/date/:date', (req, res) => {
+    const date = req.query;
+    let filteredAppointments = appointmentsDB;
+
+    // Filtragem por data
+    if (date) {
+        // Verificação se a data está no formato correto
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!dateRegex.test(date)) {
+            return res.status(400).json({ "erro": "Formato de data inválido. Use YYYY-MM-DD." });
+        }
+
+        // Filtra os agendamentos pela data
+        filteredAppointments = filteredAppointments.filter(appointment =>
+            appointment.date.startsWith(date)
+        );
+    }
+
+    res.json(filteredAppointments);
+});
 
 /**
  * @swagger

@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "specialty": "Cardiologia",
+    "comments": "Primeira consulta",
+    "date": "2023-10-10",
+    "student": "João Silva",
+    "professional": "Dr. Ana Souza",
+    "id": "ebf8885a-dcd0-4378-abdf-97c2af2294ba"
+  },
+  {
+    "specialty": "Cardiologia",
+    "comments": "Primeira consulta",
+    "date": "2023-10-10",
+    "student": "João Silva",
+    "professional": "Dr. Ana Souza",
+    "id": "7ec9bc5d-3ff9-448e-abd2-4ea5cfff14a4"
+  }
+]
