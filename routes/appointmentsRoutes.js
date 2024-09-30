@@ -136,7 +136,7 @@ router.get('/:id', (req, res) => {
  *       400:
  *         description: Parâmetros de consulta inválidos
  */
-router.get('/search', (req, res) => {
+router.get('/date/:date', (req, res) => {
     const { description, date } = req.query;
     let filteredAppointments = appointmentsDB;
 
