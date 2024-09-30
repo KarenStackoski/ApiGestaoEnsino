@@ -114,9 +114,9 @@ router.get('/:id', (req,res)=>{
 
 /**
  * @swagger
- * /teachers/name/{name}:
+ * /teachers/name/name:
  *   get:
- *     summary: Retorna um professor pelo Nome
+ *     summary: Retorna professores pelo Nome
  *     tags: [Teachers]
  *     parameters:
  *       - in: query
@@ -127,22 +127,28 @@ router.get('/:id', (req,res)=>{
  *         description: Nome do Professor(a)
  *     responses:
  *       200:
- *         description: Retorna os dados do professor(a)
+ *         description: Retorna os dados dos professores
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Teachers'
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Teachers'
  *       404:
- *         description: Professor(a) não encontrado
+ *         description: Nenhum professor(a) encontrado
  */
 
-router.get('/name/:name', (req, res) => {
-    const name = req.query.name.toLowerCase();
-    const teacher = teachersDB.filter(teacher => teacher.name.toLowerCase().includes(name));
-    if (!teacher) return res.status(404).json({
-        "erro": "Professor(a) não encontrado"
-    });
-    res.json(teacher);
+router.get('/name/name', (req, res) => {
+    const name = req.query.name.toLowerCase(); // Usando parâmetros de consulta
+    const teachers = teachersDB.filter(teacher => teacher.name.toLowerCase().includes(name)); // Filtrando professores
+
+    if (teachers.length === 0) { // Verificando se nenhum professor foi encontrado
+        return res.status(404).json({
+            "erro": "Nenhum professor(a) encontrado"
+        });
+    }
+    
+    res.json(teachers); // Retornando todos os professores encontrados
 });
 
 /**
