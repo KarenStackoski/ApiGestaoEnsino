@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "name": "Karen Bialescki Stackoski",
+    "email": "stackoski@email.com",
+    "user": "stackoski",
+    "level": "adm",
+    "status": "on",
+    "id": "e65983f9-b327-47aa-9ecc-ad4f8bbf8a5e"
+  },
+  {
+    "name": "affs",
+    "email": "stackoski@email.com",
+    "user": "stackoski",
+    "level": "adm",
+    "status": "on",
+    "id": "b26007ca-9676-4fc9-a59b-9cceea08226a"
+  }
+]
