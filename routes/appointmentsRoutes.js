@@ -106,46 +106,33 @@ router.get('/:id', (req, res) => {
 });
 /**
  * @swagger
- * /appointments/search:
+ * /appointments/date/{date}:
  *   get:
- *     summary: Pesquisa appointmentos por nome e/ou data
+ *     summary: Pesquisa agendamentos por data
  *     tags: [Appointments]
  *     parameters:
- *       - in: query
- *         name: description
- *         schema:
- *           type: string
- *         required: false
- *         description: Nome do appointment para filtragem
  *       - in: query
  *         name: date
  *         schema:
  *           type: string
  *           format: date
  *         required: false
- *         description: Data do appointment para filtragem (formato YYYY-MM-DD)
+ *         description: Data do agendamento para filtragem (formato YYYY-MM-DD)
  *     responses:
  *       200:
- *         description: Lista de appointments filtrados
+ *         description: Lista de agendamentos filtrados
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Appointment'
+ *                 $ref: '#/components/schemas/Appointments'
  *       400:
  *         description: Parâmetros de consulta inválidos
  */
 router.get('/date/:date', (req, res) => {
-    const { description, date } = req.query;
+    const date = req.query;
     let filteredAppointments = appointmentsDB;
-
-    // Filtragem por descrição
-    if (description) {
-        filteredAppointments = filteredAppointments.filter(appointment =>
-            appointment.description.toLowerCase().includes(description.toLowerCase())
-        );
-    }
 
     // Filtragem por data
     if (date) {
@@ -155,7 +142,7 @@ router.get('/date/:date', (req, res) => {
             return res.status(400).json({ "erro": "Formato de data inválido. Use YYYY-MM-DD." });
         }
 
-        // Filtra os appointmentos pela data
+        // Filtra os agendamentos pela data
         filteredAppointments = filteredAppointments.filter(appointment =>
             appointment.date.startsWith(date)
         );
