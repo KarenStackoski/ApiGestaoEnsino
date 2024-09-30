@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {v4: uuidv4} = require('uuid');
-const professionals = require('../db/professionals.json'); // Supondo que seja um array de objetos
+const professionals = require('../db/professionals.json');
 /**
  * @swagger
  * components:
