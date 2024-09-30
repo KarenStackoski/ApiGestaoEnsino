@@ -299,6 +299,11 @@ router.delete('/:id', (req, res)=>{
         "erro": "Professor(a) não encontrado"
     });
     var deletado = teachersDB.splice(id, 1)[0]
+    fs.writeFileSync(
+        path.join(__dirname, '../db/teachers.json'),
+        JSON.stringify(teachersDB, null, 2),
+        'utf8'
+    );
     res.json(deletado);
 })
 
