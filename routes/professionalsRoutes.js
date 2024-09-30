@@ -114,6 +114,83 @@ router.get('/:id', (req, res) => {
 
 /**
  * @swagger
+ * /professionals/name/{name}:
+ *  get:
+ *      summary: Retorna profissionais pelo nome
+ *      tags: [Professionals]
+ *      parameters:
+ *         - in: path
+ *           name: name
+ *           schema:
+ *              type: string
+ *           required: true
+ *           description: Nome do profissional
+ *      responses:
+ *          200:
+ *              description: Sucesso ao buscar o profissional
+ *              content: 
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: '#/components/schemas/professionals'
+ *          404:
+ *              description: Profissional não encontrado
+ */
+
+// GET por Nome: busca por nome
+router.get('/name/:name', (req, res) => {
+    const name = req.params.name.toLowerCase();
+    const profissionais = professionals.filter(prof => prof.name.toLowerCase().includes(name));
+
+    if (profissionais.length === 0) {
+        return res.status(404).json({
+            "erro": "Nenhum profissional encontrado com esse nome"
+        });
+    }
+
+    res.json(profissionais);
+});
+/**
+ * @swagger
+ * /professionals/especialidade/{especialidade}:
+ *  get:
+ *      summary: Retorna profissionais pela especialidade
+ *      tags: [Professionals]
+ *      parameters:
+ *         - in: path
+ *           name: especialidade
+ *           schema:
+ *              type: string
+ *           required: true
+ *           description: Especialidade do profissional
+ *      responses:
+ *          200:
+ *              description: Sucesso ao buscar o profissional
+ *              content: 
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: '#/components/schemas/professionals'
+ *          404:
+ *              description: Profissional não encontrado
+ */
+
+// GET por Especialidade: busca por especialidade
+router.get('/especialidade/:especialidade', (req, res) => {
+    const especialidade = req.params.especialidade.toLowerCase();
+    const profissionais = professionals.filter(prof => prof.especialidade.toLowerCase().includes(especialidade));
+
+    if (profissionais.length === 0) {
+        return res.status(404).json({
+            "erro": "Nenhum profissional encontrado com essa especialidade"
+        });
+    }
+    res.json(profissionais);
+});
+/**
+ * @swagger
  * /professionals:
  *  post:
  *      summary: Cria um profissional
