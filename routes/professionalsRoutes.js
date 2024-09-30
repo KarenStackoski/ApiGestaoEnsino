@@ -70,6 +70,72 @@ const professionals = require('../db/professionals.json');
  *                 $ref: '#/components/schemas/Professionals'
  */
 
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *      Professionals:
+ *          type: object
+ *          required:
+ *           - id
+ *           - name
+ *           - especialidade
+ *           - email
+ *           - numero
+ *           - status
+ *          properties:
+ *              id:
+ *                  type: string
+ *                  description: O id é gerado automaticamente no cadastro do profissional
+ *              name:
+ *                  type: string
+ *                  description: Nome do profissional
+ *              especialidade: 
+ *                  type: string
+ *                  description: Especialidade do profissional
+ *              email: 
+ *                  type: string
+ *                  description: Email do profissional
+ *              numero: 
+ *                  type: string
+ *                  description: Telefone do profissional
+ *              status: 
+ *                  type: string
+ *                  description: Status do profissional (on/off)
+ *          example:
+ *              name: Profissional Souza
+ *              especialidade: Fisioterapeuta
+ *              email: profissional@email.com
+ *              numero: +5511999999999
+ *              status: on
+ */
+
+/**
+ * @swagger
+ * tags: 
+ *  - name: Professionals
+ *    description: >
+ *          Controle da API pelo cadastro, consulta, edição e exclusão dos profissionais nos JSONs.
+ *          **Por Gregori Rodrigues Zaccaron**
+ */
+
+/**
+ * @swagger
+ * /professionals:
+ *  get:
+ *      summary: Retorna todos os profissionais
+ *      tags: [Professionals]
+ *      responses:
+ *          200:
+ *              description: Sucesso ao buscar os Professionals
+ *              content: 
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: '#/components/schemas/Professionals'
+ */
+
 // GET: listar todos os registros
 router.get('/', (req, res) => {
     console.log("Listando todos os profissionais");
@@ -99,6 +165,7 @@ router.get('/', (req, res) => {
  *       404:
  *         description: Profissional não encontrado
  */
+
 
 
 // GET por ID: busca por id
@@ -186,6 +253,7 @@ router.get('/especialidade/:especialidade', (req, res) => {
     const especialidade = req.params.especialidade.toLowerCase();
     const profissionais = professionals.filter(prof => prof.especialidade.toLowerCase().includes(especialidade));
 
+
     if (profissionais.length === 0) {
         return res.status(404).json({
             "erro": "Nenhum profissional encontrado com essa especialidade"
@@ -212,6 +280,7 @@ router.get('/especialidade/:especialidade', (req, res) => {
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Professionals'
+
  */
 
 // POST: cadastrar um novo registro
@@ -261,6 +330,7 @@ router.post('/', (req, res) => {
  *               $ref: '#/components/schemas/Professionals'
  *       400:
  *         description: Usuário não encontrado ou parâmetros obrigatórios ausentes
+
  */
 
 // PUT: atualizar um profissional pelo ID
@@ -311,6 +381,7 @@ router.put('/:id', (req, res) => {
  *               $ref: '#/components/schemas/Professionals'
  *       404:
  *         description: Profissional não encontrado
+
  */
 
 // DELETE: apagar um profissional pelo ID

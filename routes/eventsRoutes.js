@@ -41,7 +41,9 @@ const eventsDB = require('../db/events.json');
  * @swagger
  * tags:
  *   - name: Events
- *     description: Gerenciamento de eventos
+ *     description:  >
+ *       Controle da API pelo cadastro, consulta, edição e delete dos Eventos nos JSONs.  
+ *       **Por Luis Gabriel Mendonça Reos**
  */
 
 /**
@@ -62,36 +64,6 @@ const eventsDB = require('../db/events.json');
  */
 router.get('/', (req, res) => {
     res.json(eventsDB);
-});
-
-/**
- * @swagger
- * /events/{id}:
- *   get:
- *     summary: Retorna um evento pelo ID
- *     tags: [Events]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: ID do evento
- *     responses:
- *       200:
- *         description: Detalhes do evento
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Event'
- *       404:
- *         description: Evento não encontrado
- */
-router.get('/:id', (req, res) => {
-    const id = req.params.id;
-    const event = eventsDB.find(event => event.id === id);
-    if (!event) return res.status(404).json({ "erro": "Evento não encontrado" });
-    res.json(event);
 });
 
 /**
@@ -127,13 +99,107 @@ router.post('/', (req, res) => {
 
     eventsDB.push(event);
 
-    // Salva no arquivo JSON
+    // Salva no JSON
     fs.writeFileSync(
         path.join(__dirname, '../db/events.json'),
         JSON.stringify(eventsDB, null, 2),
         'utf8'
     );
     return res.json(event);
+});
+
+/**
+ * @swagger
+ * /events/search:
+ *   get:
+ *     summary: Pesquisa eventos por nome e/ou data
+ *     tags: [Events]
+ *     parameters:
+ *       - in: query
+ *         name: description
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: Nome do evento para filtragem
+ *       - in: query
+ *         name: date
+ *         schema:
+ *           type: string
+ *           format: date
+ *         required: false
+ *         description: Data do evento para filtragem (formato YYYY-MM-DD)
+ *     responses:
+ *       200:
+ *         description: Lista de eventos filtrados
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Event'
+ *       400:
+ *         description: Parâmetros de consulta inválidos
+ */
+router.get('/search', (req, res) => {
+    const { description, date } = req.query;
+    let filteredEvents = eventsDB;
+
+    // Filtragem por descrição
+    if (description) {
+        filteredEvents = filteredEvents.filter(event =>
+            event.description.toLowerCase().includes(description.toLowerCase())
+        );
+    }
+
+    // Filtragem por data
+    if (date) {
+        // Verificação se a data está no formato correto
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!dateRegex.test(date)) {
+            return res.status(400).json({ "erro": "Formato de data inválido. Use YYYY-MM-DD." });
+        }
+
+        // Filtra os eventos pela data
+        filteredEvents = filteredEvents.filter(event =>
+            event.date.startsWith(date)
+        );
+    }
+
+    res.json(filteredEvents);
+});
+
+/**
+ * @swagger
+ * /events/{id}:
+ *   get:
+ *     summary: Retorna um evento pelo ID
+ *     tags: [Events]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID do evento
+ *     responses:
+ *       200:
+ *         description: Detalhes do evento
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Event'
+ *       404:
+ *         description: Evento não encontrado
+ */
+router.get('/:id', (req, res) => {
+    const id = req.params.id;
+    const eventById = eventsDB.find(event => event.id === id);
+
+    if (eventById) {
+        return res.json(eventById);
+    }
+
+    res.status(404).json({ "erro": "Evento não encontrado" });
 });
 
 /**
@@ -172,25 +238,19 @@ router.put('/:id', (req, res) => {
     const updatedEvent = req.body;
     const eventIndex = eventsDB.findIndex(event => event.id === id);
 
-    if (eventIndex === -1) {
-        return res.status(404).json({ "erro": "Evento não encontrado" });
-    }
+    if (eventIndex === -1) return res.status(404).json({ "erro": "Evento não encontrado" });
 
-    // Validações de campos obrigatórios
-    if (!updatedEvent.description) return res.status(400).json({ "erro": "O evento precisa ter uma descrição" });
-    if (!updatedEvent.date) return res.status(400).json({ "erro": "O evento precisa ter uma data" });
-    if (!updatedEvent.comments) return res.status(400).json({ "erro": "O evento precisa ter comentários" });
+    // Atualiza o evento
+    eventsDB[eventIndex] = { ...eventsDB[eventIndex], ...updatedEvent };
 
-    updatedEvent.id = eventsDB[eventIndex].id;
-    eventsDB[eventIndex] = updatedEvent;
-
-    // Salva as alterações no JSON
+    // Salva no arquivo JSON
     fs.writeFileSync(
         path.join(__dirname, '../db/events.json'),
         JSON.stringify(eventsDB, null, 2),
         'utf8'
     );
-    return res.json(updatedEvent);
+
+    return res.json(eventsDB[eventIndex]);
 });
 
 /**
