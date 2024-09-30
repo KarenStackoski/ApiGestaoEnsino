@@ -36,7 +36,7 @@ const studentsDB = require('../db/students.json');
  *        description: Se o Estudante está ativamente participando das aulas
  *     example:
  *      name: Victor Leotte
- *      age: 6,
+ *      age: 6
  *      phone_number: 48999055949
  *      status: on
  * 
@@ -253,8 +253,8 @@ router.get('/name/name', (req, res) => {
       newStudent.id = studentsDB[atualStudentIndex].id
       studentsDB[atualStudentIndex] = newStudent;
   
-      fs.writeFileSync(path.join(__dirname, '../db/teachers.json'), JSON.stringify(teachersDB, null, 2), 'utf8');
-      return res.json(newTeacher);
+      fs.writeFileSync(path.join(__dirname, '../db/students.json'), JSON.stringify(studentsDB, null, 2), 'utf8');
+      return res.json(newStudent);
   });
 
 /**
