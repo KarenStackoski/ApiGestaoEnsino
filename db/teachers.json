@@ -1,5 +1,6 @@
 [
   {
+<<<<<<< Updated upstream
     "name": "Mateus M. Mariot",
     "school_disciplines": "Português",
     "contact": "mateusmartignagomariot@unesc.net",
@@ -9,6 +10,9 @@
   },
   {
     "name": "affs",
+=======
+    "name": "Karen",
+>>>>>>> Stashed changes
     "school_disciplines": "Português",
     "contact": "mateusmartignagomariot@unesc.net",
     "phone_number": 48999055949,
@@ -22,13 +26,5 @@
     "phone_number": 48999055949,
     "status": "on",
     "id": "c53ec3e9-7e19-4808-bd3d-175e634307cb"
-  },
-  {
-    "name": "Mateus M. Mariot",
-    "school_disciplines": "Português",
-    "contact": "mateusmartignagomariot@unesc.net",
-    "phone_number": 48999055949,
-    "status": "off",
-    "id": "4bd0842c-a847-498e-84cf-8ae7f23c7fdb"
   }
 ]
