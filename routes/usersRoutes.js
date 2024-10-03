@@ -115,6 +115,45 @@ router.get('/:id', (req, res) => {
 
 /**
  * @swagger
+ * /users/name/name:
+ *  get:
+ *      summary: Retorna um usuário pelo Nome
+ *      tags: [Users]
+ *      parameters:
+ *         - in: query
+ *           name: name
+ *           schema:
+ *              type: string
+ *           required: true
+ *           description: Nome do Usuário
+ *      responses:
+ *          200:
+ *              description: Sucesso ao buscar o usuário
+ *              content: 
+ *                  application/json:
+ *                      schema:
+ *                        type: array
+ *                        items:
+ *                          $ref: '#/components/schemas/Users'
+ *          404:
+ *              description: Usuário não encontrado
+ */
+
+router.get('/name/name', (req, res) => {
+
+    const name = req.query.name.toLowerCase();
+    const userName = usersDB.filter(users => users.name.toLowerCase().includes(name));
+
+    if(userName.length === 0){
+        return res.status(404).json({
+            "error": "Nenhum usuário encontrado"
+        });
+    }
+    res.json(userName);
+});
+
+/**
+ * @swagger
  * /users:
  *  post:
  *      summary: Cria um usuário

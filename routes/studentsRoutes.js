@@ -36,7 +36,7 @@ const studentsDB = require('../db/students.json');
  *        description: Se o Estudante está ativamente participando das aulas
  *     example:
  *      name: Victor Leotte
- *      age: 6,
+ *      age: 6
  *      phone_number: 48999055949
  *      status: on
  * 
@@ -108,6 +108,45 @@ const studentsDB = require('../db/students.json');
   });
   
   /**
+ * @swagger
+ * /students/name/name:
+ *   get:
+ *     summary: Retorna estudantes pelo Nome
+ *     tags: [Students]
+ *     parameters:
+ *       - in: query
+ *         name: name
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Nome do Estudante
+ *     responses:
+ *       200:
+ *         description: Retorna os dados dos Estudantes
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Students'
+ *       404:
+ *         description: Nenhum estudante encontrado
+ */
+
+router.get('/name/name', (req, res) => {
+    const name = req.query.name.toLowerCase(); // Usando parâmetros de consulta
+    const students = studentsDB.filter(student => student.name.toLowerCase().includes(name)); // Filtrando estudantes
+
+    if (students.length === 0) { // Verificando se nenhum estudante foi encontrado
+        return res.status(404).json({
+            "erro": "Nenhum estudante encontrado"
+        });
+    }
+    
+    res.json(students); // Retornando todos os estudantes encontrados
+});
+
+  /**
    * @swagger
    * /students:
    *   post:
@@ -131,6 +170,7 @@ const studentsDB = require('../db/students.json');
   //POST "/students" 
   //BODY {"id": "7a6cc1282c5f6ec0235acd2bfa780145aa2a67fd", "name": "Victor Leotte", "age": "6",
   //"phone_number": "48999055949", "status": "on"}
+
   router.post('/', (req, res)=>{
       const student = req.body;
       console.log(student);
@@ -151,7 +191,7 @@ const studentsDB = require('../db/students.json');
       studentsDB.push(student);
   
       fs.writeFileSync(
-          path.join(__dirname, '../db/student.json'),
+          path.join(__dirname, '../db/students.json'),
           JSON.stringify(studentsDB, null, 2),
           'utf8'
       );
@@ -213,8 +253,8 @@ const studentsDB = require('../db/students.json');
       newStudent.id = studentsDB[atualStudentIndex].id
       studentsDB[atualStudentIndex] = newStudent;
   
-      fs.writeFileSync(path.join(__dirname, '../db/teachers.json'), JSON.stringify(teachersDB, null, 2), 'utf8');
-      return res.json(newTeacher);
+      fs.writeFileSync(path.join(__dirname, '../db/students.json'), JSON.stringify(studentsDB, null, 2), 'utf8');
+      return res.json(newStudent);
   });
 
 /**
@@ -243,16 +283,17 @@ const studentsDB = require('../db/students.json');
   
   router.delete('/:id', (req, res)=>{
       const id = req.params.id;
-<<<<<<< Updated upstream
+
       const student = studentsDB.find(student => student.id === id);
       if(!student) return res.status(404).json({
           "erro": "Estudante não encontrado"
       });
       var deletado = studentsDB.splice(id, 1)[0]
       res.json(deletado);
-=======
+
       const studentsFind = studentsDB.find(student => student.id === id);
       const studentIndex = studentsDB.findIndex(student => student.id === id);
+
       if (studentIndex === -1) return res.status(404).json({ "erro": "Estudante não encontrado" });
       const deletedStudent = studentsDB.splice(studentIndex, 1)[0];
   
@@ -262,7 +303,5 @@ const studentsDB = require('../db/students.json');
           'utf8'
       );
       res.json(deletedStudent);
->>>>>>> Stashed changes
-  })
 
 module.exports = router;

@@ -298,16 +298,13 @@ router.delete('/:id', (req, res)=>{
     if(!teacher) return res.status(404).json({
         "erro": "Professor(a) não encontrado"
     });
-<<<<<<< Updated upstream
-    var deletado = teachersDB.splice(id, 1)[0]
-=======
     var deletado = teachersDB.splice(teacher, 1)[0]
+
     fs.writeFileSync(
         path.join(__dirname, '../db/teachers.json'),
         JSON.stringify(teachersDB, null, 2),
         'utf8'
     );
->>>>>>> Stashed changes
     res.json(deletado);
 })
 
