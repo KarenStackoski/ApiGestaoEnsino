@@ -243,12 +243,26 @@ const studentsDB = require('../db/students.json');
   
   router.delete('/:id', (req, res)=>{
       const id = req.params.id;
+<<<<<<< Updated upstream
       const student = studentsDB.find(student => student.id === id);
       if(!student) return res.status(404).json({
           "erro": "Estudante não encontrado"
       });
       var deletado = studentsDB.splice(id, 1)[0]
       res.json(deletado);
+=======
+      const studentsFind = studentsDB.find(student => student.id === id);
+      const studentIndex = studentsDB.findIndex(student => student.id === id);
+      if (studentIndex === -1) return res.status(404).json({ "erro": "Estudante não encontrado" });
+      const deletedStudent = studentsDB.splice(studentIndex, 1)[0];
+  
+      fs.writeFileSync(
+          path.join(__dirname, '../db/students.json'),
+          JSON.stringify(studentsDB, null, 2),
+          'utf8'
+      );
+      res.json(deletedStudent);
+>>>>>>> Stashed changes
   })
 
 module.exports = router;
