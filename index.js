@@ -12,7 +12,7 @@ const options = {
         info:{
             title: "API Gestão de Ensino",
             version: "1.0.0",
-            description: "API de gestão de ensino para trabalho em sala de aula",
+            description: "API de gestão de ensino para trabalho em sala de aula. Equipe: Érick Lúcio, Gregori Zaccaron, Victor Leotte, Karen Stackoski, Luis Gabriel e Mateus Mariot",
             license:{
                 name: 'Licenciado para DAII',
             },
