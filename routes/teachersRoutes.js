@@ -294,12 +294,18 @@ router.put('/:id', (req, res)=>{
 
 router.delete('/:id', (req, res)=>{
     const id = req.params.id;
-    const teacher = teachersDB.find(teacher => teacher.id === id);
-    if(!teacher) return res.status(404).json({
+    const teacher = teachersDB.findIndex(teacher => teacher.id === id);
+    if(teacher === -1) return res.status(404).json({
         "erro": "Professor(a) não encontrado"
     });
-    var deletado = teachersDB.splice(id, 1)[0]
+    var deletado = teachersDB.splice(teacher, 1)[0]
+
+    fs.writeFileSync(
+        path.join(__dirname, '../db/teachers.json'),
+        JSON.stringify(teachersDB, null, 2),
+        'utf8'
+    );
     res.json(deletado);
-})
+});
 
 module.exports = router;

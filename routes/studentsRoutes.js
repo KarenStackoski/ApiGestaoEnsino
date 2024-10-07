@@ -283,7 +283,8 @@ router.get('/name/name', (req, res) => {
   
   router.delete('/:id', (req, res)=>{
       const id = req.params.id;
-      const studentIndex = studentsDB.find(student => student.id === id);
+      const studentIndex = studentsDB.findIndex(student => student.id === id);
+
       if (studentIndex === -1) return res.status(404).json({ "erro": "Estudante não encontrado" });
       const deletedStudent = studentsDB.splice(studentIndex, 1)[0];
   
@@ -293,6 +294,5 @@ router.get('/name/name', (req, res) => {
           'utf8'
       );
       res.json(deletedStudent);
-  })
-
+    })
 module.exports = router;
