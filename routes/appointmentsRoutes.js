@@ -111,12 +111,12 @@ router.get('/:id', (req, res) => {
  *     summary: Pesquisa agendamentos por data
  *     tags: [Appointments]
  *     parameters:
- *       - in: query
+ *       - in: path
  *         name: date
  *         schema:
  *           type: string
  *           format: date
- *         required: false
+ *         required: true
  *         description: Data do agendamento para filtragem (formato YYYY-MM-DD)
  *     responses:
  *       200:
@@ -128,28 +128,30 @@ router.get('/:id', (req, res) => {
  *               items:
  *                 $ref: '#/components/schemas/Appointments'
  *       400:
- *         description: Parâmetros de consulta inválidos
+ *         description: Parâmetro de data inválido ou formato incorreto
  */
+
 router.get('/date/:date', (req, res) => {
-    const date = req.query;
+    const date = req.params.date;  // Acessa o parâmetro 'date' da rota
     let filteredAppointments = appointmentsDB;
 
-    // Filtragem por data
-    if (date) {
-        // Verificação se a data está no formato correto
-        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-        if (!dateRegex.test(date)) {
-            return res.status(400).json({ "erro": "Formato de data inválido. Use YYYY-MM-DD." });
-        }
-
-        // Filtra os agendamentos pela data
-        filteredAppointments = filteredAppointments.filter(appointment =>
-            appointment.date.startsWith(date)
-        );
+    // Verificação se a data está no formato correto
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    
+    if (!dateRegex.test(date)) {
+        return res.status(400).json({ "erro": "Formato de data inválido. Use YYYY-MM-DD." });
     }
 
+    // Filtra os agendamentos pela data
+    filteredAppointments = filteredAppointments.filter(appointment => {
+        // Certifique-se de que appointment.date é uma string no formato YYYY-MM-DD
+        return appointment.date.startsWith(date);
+    });
+
+    // Retorna os agendamentos filtrados
     res.json(filteredAppointments);
 });
+
 
 /**
  * @swagger
