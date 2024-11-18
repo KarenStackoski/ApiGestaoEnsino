@@ -5,6 +5,18 @@ const path = require('path');
 const router = express.Router();
 const teachersDB = require('../db/teachers.json');
 
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost:27017/users');
+
+const teachersSchema = new mongoose.Schema({
+    teacherName: String,
+    teacherSchoolDisciplines: String,
+    teacherContact: String,
+    teacherPhone: String,
+    teacherStatus: String,
+    teacher_create_date: { type: Date, default: Date.now }
+});
+
 
 /**
  * @swagger
@@ -13,37 +25,33 @@ const teachersDB = require('../db/teachers.json');
  *   Teachers:
  *     type: object
  *     required:
- *      - id
- *      - name
- *      - school_disciplines
- *      - contact
- *      - phone_number
- *      - status
+ *      - teacherName
+ *      - teacherSchoolDisciplines
+ *      - teacherContact
+ *      - teacherPhone
+ *      - teacherStatus
  *     properties:
- *      id:
- *        type: string
- *        description: O id é gerado automaticamente no cadastro do Professor(a)
- *      name:
+ *      teacherName:
  *        type: string
  *        description: Nome do Professor(a)
- *      school_disciplines:
+ *      teacherSchoolDisciplines:
  *        type: string
  *        description: Disciplina que o Professor(a) ministra
- *      contact:
+ *      teacherContact:
  *        type: string
  *        description: E-mail do Professor(a)
- *      phone_number:
+ *      teacherPhone:
  *        type: string
  *        description: Contato do telefone do Professor(a)
- *      status:
+ *      teacherStatus:
  *        type: string
  *        description: Se o Professor(a) está ativamente dando aulas
  *     example:
- *      name: Mateus M. Mariot
- *      school_disciplines: Português
- *      contact: mateusmartignagomariot@unesc.net
- *      phone_number: 48999055949
- *      status: on
+ *      teacherName: Mateus M. Mariot
+ *      teacherSchoolDisciplines: Português
+ *      teacherContact: mateusmartignagomariot@unesc.net
+ *      teacherPhone: 48999055949
+ *      teacherStatus: on
  * 
  */
 
@@ -74,9 +82,15 @@ const teachersDB = require('../db/teachers.json');
  *                 $ref: '#/components/schemas/Teachers'
  */
 
-router.get('/', (req, res) => {
-    console.log("getroute");
-    res.json(teachersDB);
+const Teacher = mongoose.model('Teacher', teachersSchema);
+
+router.get('/', async (req, res) => {
+    try {
+        const docs = await Teacher.find();
+        res.status(200).json(docs);
+    } catch (err) {
+        res.status(500).json({error: err.message})
+    }
 });
 
 /**
@@ -103,23 +117,29 @@ router.get('/', (req, res) => {
  *         description: Professor(a) não encontrado
  */
 
-router.get('/:id', (req,res)=>{
+router.get('/:id', async (req,res)=>{
     const id = req.params.id;
-    var teacher = teachersDB.find(teacher=>teacher.id === id);
-    if(!teacher) return res.status(404).json({
-        "erro":"Professor(a) não encontrado"
-    });
-    res.json(teacher);
+    try {
+        const docs = await Teacher.findById(id);
+        console.log(docs);
+        if (!docs) {
+            return res.status(404).json({ message: "Professor(a) não encontrado" });
+        }
+
+        res.json(docs)
+    } catch (err) {
+        res.status(500).json({error:err.message});
+    }
 });
 
 /**
  * @swagger
- * /teachers/name/name:
+ * /teachers/name/{name}:
  *   get:
  *     summary: Retorna professores pelo Nome
  *     tags: [Teachers]
  *     parameters:
- *       - in: query
+ *       - in: path
  *         name: name
  *         schema:
  *           type: string
@@ -138,17 +158,15 @@ router.get('/:id', (req,res)=>{
  *         description: Nenhum professor(a) encontrado
  */
 
-router.get('/name/name', (req, res) => {
-    const name = req.query.name.toLowerCase(); // Usando parâmetros de consulta
-    const teachers = teachersDB.filter(teacher => teacher.name.toLowerCase().includes(name)); // Filtrando professores
-
-    if (teachers.length === 0) { // Verificando se nenhum professor foi encontrado
-        return res.status(404).json({
-            "erro": "Nenhum professor(a) encontrado"
-        });
+router.get('/name/:name', async (req, res) => {
+    const name = req.params.name; // Usando parâmetros de consulta
+    try {
+        const docs = await Teacher.find({teacherName:name});
+        console.log(name);
+        res.json(docs);
+    } catch (err) {
+        res.status(500).json({error: err.message})
     }
-    
-    res.json(teachers); // Retornando todos os professores encontrados
 });
 
 /**
@@ -175,34 +193,15 @@ router.get('/name/name', (req, res) => {
 //POST "/teachers" 
 //BODY {"name": "Mateus", "school_disciplines": "Português", "contact": "mateus@ema.net", 
 //"phone_number": "4870707070", "status": "off"}
-router.post('/', (req, res)=>{
-    const teacher = req.body;
-    console.log(teacher);
-    teacher.id= uuidv4();
-    if(!teacher.name) return res.status(400).json({
-        "erro": "O Professor(a) precisa ter um nome"
-    });
-    if(!teacher.school_disciplines) return res.status(400).json({
-        "erro": "O professor(a) precisa ter uma disciplina"
-    });
-    if(!teacher.contact) return res.status(400).json({
-        "erro": "O professor(a) precisas ter um e-mail"
-    });
-    if(!teacher.phone_number) return res.status(400).json({
-        "erro": "O professor(a) precisa ter um telefone"
-    });
-    if(!teacher.status) return res.status(400).json({
-        "erro": "O professor(a) precisa ter um status"
-    });
-
-    teachersDB.push(teacher);
-
-    fs.writeFileSync(
-        path.join(__dirname, '../db/teachers.json'),
-        JSON.stringify(teachersDB, null, 2),
-        'utf8'
-    );
-    return res.json(teacher);
+router.post('/', async (req, res)=>{
+    const teacher = req.body
+    try {
+        const newTeacher = await Teacher.create(teacher);
+        console.log('Objeto salvo com sucesso!');
+        res.json(newTeacher);
+    } catch (err) {
+        res.status(500).json({error: err.message});
+    }
 });
 
 /**
@@ -235,37 +234,16 @@ router.post('/', (req, res)=>{
  *         description: Professor(a) não encontrado
  */
 
-router.put('/:id', (req, res)=>{
+router.put('/:id', async (req, res)=>{
     const id = req.params.id;
-    const newTeacher = req.body;
-    const atualTeacherIndex = teachersDB.findIndex(atualTeacherIndex => atualTeacherIndex.id === id);
-    
-    if(atualTeacherIndex === -1){
-        return res.status(400).json({
-            "erro": "Professor(a) não encontrado"
-        });
+    const n_teacher = req.body;
+    try {
+        const updatedTeacher = await Teacher.findByIdAndUpdate(id, {teacherName: n_teacher.teacherName, teacherSchoolDisciplines: n_teacher.teacherSchoolDisciplines, teacherContact: n_teacher.teacherContact, teacherPhone: n_teacher.teacherPhone, teacherStatus: n_teacher.teacherStatus}, {new: true});
+        console.log('Objeto atualizado:', updatedTeacher);
+        res.json(updatedTeacher);
+    } catch (err) {
+        res.status(500).json({error: err.message});
     }
-
-    if(!newTeacher.name) return res.status(400).json({
-        "erro": "O Professor(a) precisa ter um nome"
-    });
-    if(!newTeacher.school_disciplines) return res.status(400).json({
-        "erro": "O professor(a) precisa ter uma disciplina"
-    });
-    if(!newTeacher.contact) return res.status(400).json({
-        "erro": "O professor(a) precisas ter um e-mail"
-    });
-    if(!newTeacher.phone_number) return res.status(400).json({
-        "erro": "O professor(a) precisa ter um telefone"
-    });
-    if(!newTeacher.status) return res.status(400).json({
-        "erro": "O professor(a) precisa ter um status"
-    });
-    newTeacher.id = teachersDB[atualTeacherIndex].id
-    teachersDB[atualTeacherIndex] = newTeacher;
-
-    fs.writeFileSync(path.join(__dirname, '../db/teachers.json'), JSON.stringify(teachersDB, null, 2), 'utf8');
-    return res.json(newTeacher);
 });
 
 /**
@@ -292,20 +270,15 @@ router.put('/:id', (req, res)=>{
  *         description: Professor(a) não encontrado
  */
 
-router.delete('/:id', (req, res)=>{
+router.delete('/:id', async (req, res)=>{
     const id = req.params.id;
-    const teacher = teachersDB.findIndex(teacher => teacher.id === id);
-    if(teacher === -1) return res.status(404).json({
-        "erro": "Professor(a) não encontrado"
-    });
-    var deletado = teachersDB.splice(teacher, 1)[0]
-
-    fs.writeFileSync(
-        path.join(__dirname, '../db/teachers.json'),
-        JSON.stringify(teachersDB, null, 2),
-        'utf8'
-    );
-    res.json(deletado);
+    try {
+        const deletedTeacher = await Teacher.findByIdAndDelete(id);
+        console.log('Objeto deletado: ', deletedTeacher);
+        res.json(deletedTeacher);
+    } catch (err) {
+        res.status(500).json({error:err.message});
+    }
 });
 
 module.exports = router;
