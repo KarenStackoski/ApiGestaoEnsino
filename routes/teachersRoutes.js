@@ -6,7 +6,7 @@ const router = express.Router();
 const teachersDB = require('../db/teachers.json');
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/users');
+mongoose.connect('mongodb://localhost:27017');
 
 const teachersSchema = new mongoose.Schema({
     teacherName: String,
