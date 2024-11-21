@@ -6,7 +6,7 @@ const router = express.Router();
 const teachersDB = require('../db/teachers.json');
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/test');
+mongoose.connect('mongodb://localhost:27017');
 
 const teachersSchema = new mongoose.Schema({
     teacherName: String,
@@ -162,7 +162,9 @@ router.get('/name/:name', async (req, res) => {
     const name = req.params.name; // Usando parâmetros de consulta
     try {
         const docs = await Teacher.find({teacherName:name});
-        console.log(name);
+        if(!docs || docs.length === 0){
+            return res.status(404).json({message:"Professor(a) não encontrado"})
+        }
         res.json(docs);
     } catch (err) {
         res.status(500).json({error: err.message})

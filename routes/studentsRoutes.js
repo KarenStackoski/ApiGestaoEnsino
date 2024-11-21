@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require('uuid');
 const mongoose = require('mongoose');
 const router = express.Router();
 
-mongoose.connect('mongodb://localhost:27017/test', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://localhost:27017');
 
 // Definindo o Schema do Estudante
 const studentSchema = new mongoose.Schema({
