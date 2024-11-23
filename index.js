@@ -46,4 +46,7 @@ app.use(express.json());
 app.use('/', routes)
 
 app.listen(8080, function () { 
-    console.log('Aplicação executando na porta 8080!'); }); 
+    console.log('Aplicação executando na porta 8080!');
+    console.log('Aplicação: http://localhost:8080/');
+    console.log('docs: http://localhost:8080/api-docs/');
+}); 
