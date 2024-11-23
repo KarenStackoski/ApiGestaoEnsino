@@ -156,8 +156,8 @@ router.get('/search', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const student = await Student.findById(req.params.id);
-    if (!student) return res.status(404).json({ error: 'Estudante não encontrado' });
-    res.json(student);
+      if (!student) return res.status(404).json({ error: 'Estudante não encontrado' });
+      res.json(student);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

@@ -159,9 +159,8 @@ router.get('/:id', async (req,res)=>{
  *         description: Parâmetro de data inválido ou formato incorreto
  */
 
-router.get('/date/:date', (req, res) => {
+router.get('/date/:date', async (req, res) => {
     const date = req.params.date;  // Acessa o parâmetro 'date' da rota
-    let filteredAppointments = appointmentsDB;
 
     // Verificação se a data está no formato correto
     const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
@@ -170,14 +169,14 @@ router.get('/date/:date', (req, res) => {
         return res.status(400).json({ "erro": "Formato de data inválido. Use YYYY-MM-DD." });
     }
 
-    // Filtra os agendamentos pela data
-    filteredAppointments = filteredAppointments.filter(appointment => {
-        // Certifique-se de que appointment.date é uma string no formato YYYY-MM-DD
-        return appointment.date.startsWith(date);
-    });
-
-    // Retorna os agendamentos filtrados
-    res.json(filteredAppointments);
+    try{
+        // Filtra os agendamentos pela data
+        const appointment = await Appointment.findById(dateRegex);
+        if (!appointment) return res.status(404).json({ error: 'Agendamento não encontrado' });
+        res.json(appointment);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 
@@ -203,7 +202,7 @@ router.get('/date/:date', (req, res) => {
  *       400:
  *         description: Erro de validação
  */
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
     const appointment = req.body;
     appointment.id = uuidv4();
 
@@ -214,15 +213,14 @@ router.post('/', (req, res) => {
     if (!appointment.student) return res.status(400).json({ "erro": "O agendamento precisa ter um estudante" });
     if (!appointment.professional) return res.status(400).json({ "erro": "O agendamento precisa ter um profissional" });
 
-    appointmentsDB.push(appointment);
+    try {
+        const newAppointment = new Appointment(appointment);
+        await newAppointment.save();
+        res.status(201).json(newAppointment);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 
-    // Salva no arquivo JSON
-    fs.writeFileSync(
-        path.join(__dirname, '../db/appointments.json'),
-        JSON.stringify(appointmentsDB, null, 2),
-        'utf8'
-    );
-    return res.json(appointment);
 });
 
 /**
