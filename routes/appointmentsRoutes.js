@@ -1,9 +1,21 @@
 const express = require('express');
-const { v4: uuidv4 } = require('uuid');
+const {v4: uuidv4} = require('uuid');
 const fs = require('fs');
 const path = require('path');
 const router = express.Router();
 const appointmentsDB = require('../db/appointments.json');
+
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost:27017');
+
+const appointmentsSchema = new mongoose.Schema({
+    appointmentId: String,
+    appointmentSpeciality: String,
+    appointmentComments: String,
+    appointmentDate: String,
+    appointmentStudent: String,
+    appointmentProfessional: String
+});
 
 /**
  * @swagger
@@ -71,8 +83,16 @@ const appointmentsDB = require('../db/appointments.json');
  *               items:
  *                 $ref: '#/components/schemas/Appointments'
  */
-router.get('/', (req, res) => {
-    res.json(appointmentsDB);
+
+const Appointment = mongoose.model('Appointment', appointmentsSchema);
+
+router.get('/', async (req, res) => {
+    try {
+        const docs = await Appointment.find();
+        res.status(200).json(docs);
+    } catch (err) {
+        res.status(500).json({error: err.message})
+    }
 });
 
 /**
@@ -98,11 +118,19 @@ router.get('/', (req, res) => {
  *       404:
  *         description: Agendamento não encontrado
  */
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req,res)=>{
     const id = req.params.id;
-    const appointment = appointmentsDB.find(appointment => appointment.id === id);
-    if (!appointment) return res.status(404).json({ "erro": "Agendamento não encontrado" });
-    res.json(appointment);
+    try {
+        const docs = await Appointment.findById(id);
+        console.log(docs);
+        if (!docs) {
+            return res.status(404).json({ message: "Agendamento(a) não encontrado" });
+        }
+
+        res.json(docs)
+    } catch (err) {
+        res.status(500).json({error:err.message});
+    }
 });
 /**
  * @swagger
