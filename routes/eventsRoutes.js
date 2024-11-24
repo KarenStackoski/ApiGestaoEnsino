@@ -74,6 +74,61 @@ router.get('/', async (req, res) => {
 
 /**
  * @swagger
+ * /events/search:
+ *   get:
+ *     summary: Pesquisa eventos por descrição e/ou data
+ *     tags: [Events]
+ *     parameters:
+ *       - in: query
+ *         name: description
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: Descrição parcial ou total do evento
+ *       - in: query
+ *         name: date
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: Data do evento no formato YYYY-MM-DD
+ *     responses:
+ *       200:
+ *         description: Lista de eventos filtrados
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Event'
+ *       400:
+ *         description: Parâmetros de consulta inválidos
+ */
+router.get('/search', async (req, res) => {
+    const { description, date } = req.query;
+    const filters = {};
+
+    if (description) {
+        filters.description = new RegExp(description, 'i'); // Filtro para buscar pela descrição (case-insensitive)
+    }
+
+    if (date) {
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!dateRegex.test(date)) {
+            return res.status(400).json({ error: "Formato de data inválido. Use YYYY-MM-DD." });
+        }
+        filters.date = { $regex: `^${date}` }; // Filtro para buscar pela data
+    }
+
+    try {
+        const events = await Event.find(filters);
+        res.json(events);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+/**
+ * @swagger
  * /events:
  *   post:
  *     summary: Cria um novo evento
