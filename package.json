@@ -19,6 +19,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "mongoose": "^8.8.2",
+    "next": "^15.0.3",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
   }
