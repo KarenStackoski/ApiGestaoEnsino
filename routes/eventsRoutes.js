@@ -89,7 +89,6 @@ router.get('/', async (req, res) => {
  *         name: date
  *         schema:
  *           type: string
- *           format: date
  *         required: false
  *         description: Data do evento no formato YYYY-MM-DD
  *     responses:
