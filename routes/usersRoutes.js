@@ -1,6 +1,4 @@
 const express = require('express');
-const { v4: uuidv4 } = require('uuid');
-const fs = require('fs');
 const path = require('path');
 const router = express.Router();
 const usersDB = require('../db/users.json');
@@ -13,7 +11,8 @@ const usersSchema = new mongoose.Schema({
     userEmail: String,
     userUser: String,
     userLevel: String,
-    userStatus: Boolean
+    userStatus: Boolean,
+    userPassword: String  // Adicionando a senha
 });
 
 /**
@@ -28,6 +27,7 @@ const usersSchema = new mongoose.Schema({
  *           - userUser
  *           - userLevel
  *           - userStatus
+ *           - userPassword  // Adicionando a senha como campo obrigatório
  *          properties:
  *              userName:
  *                  type: string
@@ -44,12 +44,16 @@ const usersSchema = new mongoose.Schema({
  *              userStatus: 
  *                  type: boolean
  *                  description: Status do usuário
+ *              userPassword: 
+ *                  type: string
+ *                  description: Senha do usuário
  *          example:
  *              userName: Karen Bialescki Stackoski
  *              userEmail: stackoski@email.com
  *              userUser: stackoski
  *              userLevel: adm
  *              userStatus: true
+ *              userPassword: mySecurePassword123
  */
 
 /**
@@ -130,48 +134,6 @@ router.get('/:id', async (req, res) => {
 
 /**
  * @swagger
- * /users/name/{name}:
- *  get:
- *      summary: Retorna um usuário pelo Nome
- *      tags: [Users]
- *      parameters:
- *         - in: query
- *           name: name
- *           schema:
- *              type: string
- *           required: true
- *           description: Nome do Usuário
- *      responses:
- *          200:
- *              description: Sucesso ao buscar o usuário
- *              content: 
- *                  application/json:
- *                      schema:
- *                        type: array
- *                        items:
- *                          $ref: '#/components/schemas/Users'
- *          404:
- *              description: Usuário não encontrado
- */
-
-router.get('/name/:name', async (req, res) => {
-
-    const name = req.query.name;
-
-    try {
-        const docs = await User.find({userName:name});
-        console.log(name);
-        if(!docs || docs.length === 0){
-            return res.status(404).json({message:"Usuário não encontrado"})
-        }
-        res.json(docs);
-    } catch (err) {
-        res.status(500).json({error: err.message});
-    }
-});
-
-/**
- * @swagger
  * /users:
  *  post:
  *      summary: Cria um usuário
@@ -242,7 +204,8 @@ router.put('/:id', async (req, res) => {
             userEmail: newUser.userEmail,
             userUser: newUser.userUser,
             userLevel: newUser.userLevel,
-            userStatus: newUser.userStatus
+            userStatus: newUser.userStatus,
+            userPassword: newUser.userPassword  // Atualizando a senha
         }, {new: true});
         res.json(updateUser);
     } catch (err) {
