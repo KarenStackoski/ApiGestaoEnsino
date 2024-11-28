@@ -114,7 +114,7 @@ router.post('/', async (req, res) => {
     try {
         const professional = new Professional(req.body);
         const savedProfessional = await professional.save();
-        res.status(201).json(savedProfessional);
+        res.status(200).json(savedProfessional);
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
