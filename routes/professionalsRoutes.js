@@ -90,81 +90,6 @@ router.get('/', async (req, res) => {
 
 /**
  * @swagger
- * /professionals/{id}:
- *  get:
- *      summary: Retorna um profissional pelo ID
- *      tags: [Professionals]
- *      parameters:
- *         - in: path
- *           name: id
- *           schema:
- *              type: string
- *           required: true
- *           description: ID do profissional
- *      responses:
- *          200:
- *              description: Sucesso ao buscar o profissional
- *              content: 
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/Professionals'
- *          404:
- *              description: Profissional não encontrado
- */
-
-// GET: buscar profissional por ID
-router.get('/:id', async (req, res) => {
-    try {
-        const professional = await Professional.findById(req.params.id);
-        if (!professional) {
-            return res.status(404).json({ message: "Profissional não encontrado" });
-        }
-        res.json(professional);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-/**
- * @swagger
- * /professionals/name/{name}:
- *  get:
- *      summary: Retorna profissionais pelo nome
- *      tags: [Professionals]
- *      parameters:
- *         - in: path
- *           name: name
- *           schema:
- *              type: string
- *           required: true
- *           description: Nome do profissional
- *      responses:
- *          200:
- *              description: Sucesso ao buscar o profissional
- *              content: 
- *                  application/json:
- *                      schema:
- *                          type: array
- *                          items:
- *                              $ref: '#/components/schemas/professionals'
- *          404:
- *              description: Profissional não encontrado
- */
-
-// GET: buscar profissional por nome
-router.get('/name/:name', async (req, res) => {
-    try {
-        const professionals = await Professional.find({ professionalName: req.params.name });
-        if (professionals.length === 0) {
-            return res.status(404).json({ message: "Nenhum profissional encontrado com esse nome" });
-        }
-        res.json(professionals);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-/**
- * @swagger
  * /professionals:
  *  post:
  *      summary: Cria um profissional
@@ -189,7 +114,7 @@ router.post('/', async (req, res) => {
     try {
         const professional = new Professional(req.body);
         const savedProfessional = await professional.save();
-        res.status(201).json(savedProfessional);
+        res.status(200).json(savedProfessional);
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
