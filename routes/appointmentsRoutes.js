@@ -9,12 +9,12 @@ const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017');
 
 const appointmentsSchema = new mongoose.Schema({
-    id: String,
-    speciality: String,
-    comments: String,
-    date: String,
-    student: String,
-    professional: String,
+    appointmentId: String,
+    appointmentSpeciality: String,
+    appointmentComments: String,
+    appointmentDate: String,
+    appointmentStudent: String,
+    appointmentProfessional: String,
     appointment_create_date: { type: Date, default: Date.now }
 });
 
@@ -90,6 +90,8 @@ const Appointment = mongoose.model('Appointment', appointmentsSchema);
 router.get('/', async (req, res) => {
     try {
         const docs = await Appointment.find();
+        console.log(docs);
+        
         res.status(200).json(docs);
     } catch (err) {
         res.status(500).json({error: err.message})
@@ -127,7 +129,6 @@ router.get('/:id', async (req,res)=>{
         if (!docs) {
             return res.status(404).json({ message: "Agendamento(a) não encontrado" });
         }
-
         res.json(docs)
     } catch (err) {
         res.status(500).json({error:err.message});
@@ -207,7 +208,7 @@ router.post('/', async (req, res) => {
     const appointment = req.body;
 
     // Validações de campos obrigatórios
-    if (!appointment.speciality) return res.status(400).json({ "erro": "O agendamento precisa ter uma especialidade" });
+    if (!appointment.   speciality) return res.status(400).json({ "erro": "O agendamento precisa ter uma especialidade" });
     if (!appointment.comments) return res.status(400).json({ "erro": "O agendamento precisa ter comentários" });
     if (!appointment.date) return res.status(400).json({ "erro": "O agendamento precisa ter uma data" });
     if (!appointment.student) return res.status(400).json({ "erro": "O agendamento precisa ter um estudante" });
@@ -222,7 +223,7 @@ router.post('/', async (req, res) => {
     }
 
 });
-
+    
 /**
  * @swagger
  * /appointments/{id}:
