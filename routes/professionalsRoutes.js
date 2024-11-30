@@ -10,7 +10,7 @@ const professionalSchema = new mongoose.Schema({
     professionalSpeciality: String,
     professionalEmail: String,
     professionalPhone: String,
-    professionalStatus: String,
+    professionalStatus: Boolean,
     professional_create_date: { type: Date, default: Date.now }
 });
 

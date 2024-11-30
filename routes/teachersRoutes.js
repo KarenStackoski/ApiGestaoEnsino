@@ -13,7 +13,7 @@ const teachersSchema = new mongoose.Schema({
     teacherSchoolDisciplines: String,
     teacherContact: String,
     teacherPhone: String,
-    teacherStatus: String,
+    teacherStatus: Boolean,
     teacher_create_date: { type: Date, default: Date.now }
 });
 
@@ -44,14 +44,14 @@ const teachersSchema = new mongoose.Schema({
  *        type: string
  *        description: Contato do telefone do Professor(a)
  *      teacherStatus:
- *        type: string
+ *        type: boolean
  *        description: Se o Professor(a) está ativamente dando aulas
  *     example:
  *      teacherName: Mateus M. Mariot
  *      teacherSchoolDisciplines: Português
  *      teacherContact: mateusmartignagomariot@unesc.net
  *      teacherPhone: 48999055949
- *      teacherStatus: on
+ *      teacherStatus: true
  * 
  */
 
